@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import {useState} from "react";
 import './App.css';
+import {DragDropContext, Draggable, Droppable} from "react-beautiful-dnd";
 
 function App() {
+
+  const [list, setList] = useState([{id: '1', text: 'one'}, {id: '2', text: 'two'}, {id: '3', text:'three'}]);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+
+      <DragDropContext>
+        <Droppable droppableId="list">
+          {provided => {
+            return (
+              <div ref={provided.innerRef} {...provided.droppableProps}>
+                {
+                  list.map((item, index) => (
+                    <Draggable draggableId={item.id} index={index}>
+                      {provided => <div className="list-item" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>{item.text}</div>}
+
+                    </Draggable>
+
+                  ))
+                }
+                {provided.placeholder}
+
+              </div>
+            )
+          }}
+        </Droppable>
+      </DragDropContext>
+
+
     </div>
   );
 }
